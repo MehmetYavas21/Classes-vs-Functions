@@ -125,4 +125,120 @@ Now it’s time to play around a bit with the code.
 
 [mozilla bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind?retiredLocale=de)
 
+check for [solutiton](index.js)
+
+## Class components in React
+
+In React, the features of classes we talked about are used in class components. Class components must always extend React’s Component class, which comes with a lot of methods and some properties. A class component must have a render method, which returns the JSX. Constructors are used to handle state, among other things. 
+
+We will show you two equivalent components to get used to class components. The first one is a functional component from earlier in this module:
+
+
+                  import { useState } from 'react';
+
+                  export const DrinkButtons = () => {
+                      const [drinkSelected, setDrinkSelected] = useState(false)
+
+                      const clickHandler = () => {
+                          setDrinkSelected(true);
+                      };
+
+                      return (
+                          <>
+                          <div className="Button-group">
+                              <button className="Button" onClick={clickHandler}>
+                                  Tea
+                              </button>
+                          </div>
+                          </>
+                          );
+                  };
+
+Now we have the exact same functionality, but written as a class component:
+
+                  import { Component } from 'react';
+
+                  export class DrinkButtons extends Component {
+                      constructor(props) {
+                          super(props);
+                          this.state = {drinkSelected: false};
+                          this.clickHandler= this.clickHandler.bind(this);
+                      }
+
+                      clickHandler(){
+                          this.setState({ drinkSelected: true });
+                      }
+
+                      render(){
+                          return (
+                              <>
+                                  <div className="Button-group">
+                                      <button className="Button" onClick={this.clickHandler}>
+                                          Tea
+                                      </button>
+                                  </div>
+                              </>
+                              );
+                      }
+                  }
+
+You can immediately see that the functional component is much smaller and easier to grasp. One thing that is almost identical between the two is the JSX that is returned (from the function component and from the render method on the class component). There is one key difference: instead of just having `onClick={clickHandler}`, we instead have to add `this.`. 
+
+The handling of the state is much more elegant in the function component. However, this does mean that a lot of the magic of what is happening is hidden away from the developer. In the class component, we assign the initial state inside the constructor on line 6. Setting any property inside the constructor always has to come after forwarding the props to `super`. 
+
+Whereas with the `useState` hook, we always got a setter function along with the state, in the case of class components, there is a default `setState` method that you can use to set the state. See line 11. 
+
+One peculiarity you have with class components is that you have to bind your event handlers (line 7). You will see this often in class components, which has to do with how classes work. In general, you can say that if you want to refer to a method without calling it directly (as in `this.clickHandler` on line 18), you have to bind it inside the constructor. When writing class components, this is easy to forget and it can become the source of lots of frustrating bug hunts. 
+
+## Exercise: Convert class component to function component
+
+At the end of this exercise, you can convert a class component to a function component.
+
+**Description**
+
+The following is a class component from the documentation of React. Your task is to convert this to a function component!
+
+                  import { Component } from 'react';
+
+                  export class Toggle extends Component {
+                     constructor(props) {
+                         super(props);
+                         this.state = { isToggleOn: true };
+                         this.handleClick = this.handleClick.bind(this);
+                     }
+
+                     handleClick() {
+                         this.setState((prevState) => ({
+                             isToggleOn: !prevState.isToggleOn,
+                         }));
+                     }
+
+                     render() {
+                         return (
+                             <button onClick={this.handleClick}>
+                                {this.state.isToggleOn ? 'ON' : 'OFF'}
+                             </button>
+                         );
+                     }
+                  }
+
+## Steps
+
+- Create a Toggle.jsx file in an existing or new project and paste in this code. Render it somewhere on the page so you can see it working.
+
+- Rename the class to ToggleOld. Create a new function called Toggle and export it. 
+
+- Try to copy all the exact same functionalities.
+
+check the [solution](Toggle.jsx)
+
+**Documentation**
+- [React.Component](https://qag99.online/school/hvtrs8%2F-rgaaths%2Copg-dmcq%2Fpeccv-aoopmngnv.jtol)
+
+- Function and class components
+
+- Converting a function to a class
+
+- Handling events
+
 
